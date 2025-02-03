@@ -1,20 +1,27 @@
+import string
 errors = []
 pswd = input()
-import string
+
 
 def down_in_pswd(s: str):
-    return '_' in s
+    if '_' in s:
+        return True
+    else:
+        errors.append('В пароле должен быть символ подчёркивания.')
+        return False
 
 def eng_letters(s: str):
     for i in s:
-        if i.isalpha():
-            return True
-    return False
+        if i not in string.ascii_letters + string.digits + '_':
+            errors.append('Пароль должен состоять только из латинских букв')
+            return False
+        return True
 
 def num_in_s(s: str):
     for i in s:
         if i.isdigit():
             return True
+    errors.append('В пароле должна быть цифра')
     return False
 
 
@@ -34,7 +41,7 @@ def check_title_pswd(s: str):
 
 
 def last_el(s: str):
-    if s[-1].isalnum():
+    if s[-1] in string.ascii_letters + string.digits:
         return True
     else:
         errors.append('Пароль должен заканчиваться только латинской буквой или цифрой')
@@ -42,22 +49,14 @@ def last_el(s: str):
 
 
 def len_str(s):
-    if 12 < len(s) < 32:
+    if 12 <= len(s) <= 32:
         return True
     else:
         errors.append('Минимальная длина пароля — 12 символов, максимальная — 32 символа')
         return False
 
-def telo_pswd(s):
-    return all([down_in_pswd(pswd), eng_letters(pswd), num_in_s(pswd)]) 
-flag = False
-if telo_pswd == True:
-    flag = True
-else:
-    errors.append("Пароль должен состоять только из латинских букв, цифр и символа нижнего подчёркивания ('_')")
 
-
-if all([check_not_zero_str(pswd), check_title_pswd(pswd), telo_pswd(pswd), last_el(pswd), len_str(pswd)]):
+if all([check_not_zero_str(pswd), check_title_pswd(pswd), down_in_pswd(pswd), eng_letters(pswd), num_in_s(pswd), last_el(pswd), len_str(pswd)]):
     print("Пароль принят!")
     with open('valid_passwords.txt', 'a') as f:
         f.write(pswd + '\n')
