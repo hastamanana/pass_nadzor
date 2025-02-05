@@ -1,6 +1,7 @@
 import string
+
+ru_elements = 'абвгдеёжзийклмнопрстуфхцчшщъыьэюя'
 errors = []
-pswd = input()
 
 
 def down_in_pswd(s: str):
@@ -11,11 +12,14 @@ def down_in_pswd(s: str):
         return False
 
 def eng_letters(s: str):
+    flag = True
     for i in s:
-        if i not in string.ascii_letters + string.digits + '_':
+        if i not in ru_elements:
+            continue
+        else:
             errors.append('Пароль должен состоять только из латинских букв')
-            return False
-        return True
+            flag = False
+    return flag
 
 def num_in_s(s: str):
     for i in s:
@@ -23,13 +27,6 @@ def num_in_s(s: str):
             return True
     errors.append('В пароле должна быть цифра')
     return False
-
-
-def check_not_zero_str(s: str):
-    if len(s) > 0:
-        return True
-    else:
-        raise 'Пустая строка'
 
 
 def check_title_pswd(s: str):
@@ -55,8 +52,11 @@ def len_str(s):
         errors.append('Минимальная длина пароля — 12 символов, максимальная — 32 символа')
         return False
 
+pswd = input()
 
-if all([check_not_zero_str(pswd), check_title_pswd(pswd), down_in_pswd(pswd), eng_letters(pswd), num_in_s(pswd), last_el(pswd), len_str(pswd)]):
+if not pswd:
+    print('Пароль обязательное поле')
+elif all([check_title_pswd(pswd), down_in_pswd(pswd), eng_letters(pswd), num_in_s(pswd), last_el(pswd), len_str(pswd)]):
     print("Пароль принят!")
     with open('valid_passwords.txt', 'a') as f:
         f.write(pswd + '\n')
